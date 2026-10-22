@@ -236,8 +236,10 @@ const verifyPayment = async (req, res, next) => {
       console.error('Invoice PDF generation error:', pdfErr.message);
     }
 
-    // Fire payment notification event
-    await notificationService.onPaymentReceived({ client, therapist, payment, invoiceNumber });
+    // Fire payment notification event asynchronously so email network lags never block client confirmation
+    notificationService.onPaymentReceived({ client, therapist, payment, invoiceNumber }).catch((notifErr) => {
+      console.warn('Payment receipt notification warning:', notifErr.message);
+    });
 
     res.json({
       success: true,

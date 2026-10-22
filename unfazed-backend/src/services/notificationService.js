@@ -21,6 +21,9 @@ class NotificationService {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS,
             },
+            connectionTimeout: 4000,
+            greetingTimeout: 4000,
+            socketTimeout: 5000,
           });
         } else {
           this.transporter = nodemailer.createTransport({
@@ -31,6 +34,9 @@ class NotificationService {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS,
             },
+            connectionTimeout: 4000,
+            greetingTimeout: 4000,
+            socketTimeout: 5000,
           });
         }
       } else {
@@ -45,6 +51,9 @@ class NotificationService {
               user: testAccount.user,
               pass: testAccount.pass,
             },
+            connectionTimeout: 4000,
+            greetingTimeout: 4000,
+            socketTimeout: 5000,
           });
         }
       }

@@ -263,8 +263,10 @@ const bookSlot = async (req, res, next) => {
     client.last_session_at = startTime;
     await client.save();
 
-    // Fire event-driven notifications
-    await notificationService.onBookingConfirmed({ client, therapist, session });
+    // Fire event-driven notifications asynchronously so mail/WhatsApp latency never delays client HTTP response
+    notificationService.onBookingConfirmed({ client, therapist, session }).catch((notifErr) => {
+      console.warn('Booking confirmation notification warning:', notifErr.message);
+    });
 
     res.status(201).json({
       success: true,
