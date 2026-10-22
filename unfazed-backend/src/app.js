@@ -69,13 +69,44 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
-// Catch 404
-app.use('*', (req, res) => {
+const fs = require('fs');
+
+// Explicit 404 handler for unmatched /api/* routes
+app.all('/api/*', (req, res) => {
   res.status(404).json({
     success: false,
     message: `API Route not found: ${req.method} ${req.originalUrl}`,
   });
 });
+
+// Locate frontend production dist directory across deployment environments
+const possibleDistPaths = [
+  path.resolve(__dirname, '../../unfazed-frontend/dist'),
+  path.resolve(__dirname, '../public'),
+  path.resolve(process.cwd(), 'unfazed-frontend/dist'),
+  path.resolve(process.cwd(), 'dist'),
+];
+
+const frontendDistPath = possibleDistPaths.find((p) => fs.existsSync(p));
+
+if (frontendDistPath) {
+  // Serve built static assets (JS, CSS, images, etc.)
+  app.use(express.static(frontendDistPath));
+
+  // SPA fallback: All non-API GET requests serve index.html to support React Router client-side refreshes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+} else {
+  // Fallback if frontend has not been compiled yet
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      status: 'healthy',
+      message: 'Unfazed Backend API service is online. Frontend static bundle not built yet.',
+      healthCheck: '/api/health',
+    });
+  });
+}
 
 // Centralized error handler
 app.use(errorHandler);

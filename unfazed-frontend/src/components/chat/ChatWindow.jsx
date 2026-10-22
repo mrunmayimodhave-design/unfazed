@@ -3,9 +3,19 @@ import { io } from 'socket.io-client';
 import { Send, MessageCircle, ShieldCheck } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 
-const SOCKET_URL = import.meta.env.VITE_API_BASE_URL
-  ? import.meta.env.VITE_API_BASE_URL.replace('/api', '')
-  : 'http://localhost:5000';
+// In production, when served as a unified full-stack web service, connect to same-origin.
+// In local development, fall back to http://localhost:5000 (or VITE_API_BASE_URL if set).
+const getSocketUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace('/api', '');
+  }
+  if (import.meta.env.PROD) {
+    return typeof window !== 'undefined' ? window.location.origin : '';
+  }
+  return 'http://localhost:5000';
+};
+
+const SOCKET_URL = getSocketUrl();
 
 const ChatWindow = ({ therapistId, clientId, senderType = 'therapist', senderName = 'Dr. Ananya Roy', recipientName = 'Client' }) => {
   const [messages, setMessages] = useState([]);

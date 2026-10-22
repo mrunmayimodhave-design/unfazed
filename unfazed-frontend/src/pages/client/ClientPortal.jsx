@@ -46,7 +46,8 @@ const ClientPortal = () => {
   }, [clientId]);
 
   const handleDownloadInvoice = (invoiceNumber) => {
-    const downloadUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/payments/invoice/${invoiceNumber}/download`;
+    const apiBase = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? `${window.location.origin}/api` : 'http://localhost:5000/api');
+    const downloadUrl = `${apiBase}/payments/invoice/${invoiceNumber}/download`;
     window.open(downloadUrl, '_blank');
   };
 

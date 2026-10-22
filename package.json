@@ -1,0 +1,32 @@
+{
+  "name": "unfazed",
+  "version": "1.0.0",
+  "description": "Unfazed — SaaS Platform for Therapists in India (Full-Stack Monorepo)",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:frontend && npm run install:backend",
+    "build:frontend": "npm --prefix unfazed-frontend install && npm --prefix unfazed-frontend run build",
+    "install:backend": "npm --prefix unfazed-backend install",
+    "install:all": "npm --prefix unfazed-backend install && npm --prefix unfazed-frontend install",
+    "start": "node unfazed-backend/server.js",
+    "dev:backend": "npm --prefix unfazed-backend run dev",
+    "dev:frontend": "npm --prefix unfazed-frontend run dev",
+    "seed": "npm --prefix unfazed-backend run seed",
+    "test": "node testDeployment.js"
+  },
+  "keywords": [
+    "therapy",
+    "saas",
+    "express",
+    "react",
+    "vite",
+    "socketio",
+    "razorpay",
+    "practice-management"
+  ],
+  "author": "Unfazed Team",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

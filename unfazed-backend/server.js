@@ -1,3 +1,6 @@
+const path = require('path');
+// Load .env from backend directory or project root if running locally
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
@@ -14,10 +17,13 @@ const startServer = async () => {
   // Create HTTP server
   const server = http.createServer(app);
 
-  // Initialize Socket.io
+  // Initialize Socket.io (supports unified full-stack same origin and external frontends)
   const io = new Server(server, {
     cors: {
-      origin: ['http://localhost:5173', 'http://localhost:3000', process.env.FRONTEND_URL].filter(Boolean),
+      origin: (origin, callback) => {
+        // In unified deployment, origin is same-host or allowed development hosts
+        callback(null, true);
+      },
       methods: ['GET', 'POST'],
       credentials: true,
     },
@@ -26,11 +32,12 @@ const startServer = async () => {
   // Attach socket handlers
   registerChatSocket(io);
 
-  // Server only starts accepting requests after DB connection is established
-  server.listen(PORT, () => {
+  // Server listens on process.env.PORT and 0.0.0.0 for Render production container routing
+  const HOST = '0.0.0.0';
+  server.listen(PORT, HOST, () => {
     console.log(`\n======================================================`);
-    console.log(`🚀 Unfazed Backend Server listening on port ${PORT}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🚀 Unfazed Full-Stack Web Service listening on port ${PORT} (host: ${HOST})`);
+    console.log(`🌐 Health check: http://${HOST}:${PORT}/api/health`);
     console.log(`📡 Socket.IO server ready for live chat`);
     console.log(`======================================================\n`);
   });

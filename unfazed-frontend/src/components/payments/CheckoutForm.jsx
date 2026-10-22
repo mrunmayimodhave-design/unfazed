@@ -152,7 +152,8 @@ const CheckoutForm = ({
 
   const downloadInvoice = () => {
     if (!completedPayment?.invoiceNumber) return;
-    const downloadUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/payments/invoice/${completedPayment.invoiceNumber}/download`;
+    const apiBase = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? `${window.location.origin}/api` : 'http://localhost:5000/api');
+    const downloadUrl = `${apiBase}/payments/invoice/${completedPayment.invoiceNumber}/download`;
     window.open(downloadUrl, '_blank');
   };
 

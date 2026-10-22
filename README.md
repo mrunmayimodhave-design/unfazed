@@ -166,5 +166,45 @@ Once you run `npm run seed`, the database is populated with realistic test data:
 
 ---
 
+## 🚀 Deploying to Render as ONE Full-Stack Web Service
+
+Unfazed is fully configured to deploy as **a single full-stack Web Service on Render** with one unified public URL (e.g., `https://unfazed.onrender.com`). Express serves both the compiled React frontend static files, handles React Router SPA page refreshes, and runs all `/api/*` endpoints and Socket.IO.
+
+### Render Settings
+
+1. Create a **New Web Service** on [Render Dashboard](https://dashboard.render.com).
+2. Connect your GitHub repository: `https://github.com/mrunmayimodhave-design/unfazed`.
+3. Configure the service settings:
+   - **Name**: `unfazed`
+   - **Region**: Any (e.g., `Oregon` or `Singapore`)
+   - **Branch**: `main`
+   - **Root Directory**: `.` *(leave blank or set to root directory)*
+   - **Runtime**: `Node`
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+   - **Plan**: `Free`
+
+### Environment Variables on Render Dashboard
+
+Add the following environment variables under **Environment** in your Render service:
+
+| Variable | Value / Description | Required |
+|---|---|---|
+| `NODE_ENV` | `production` | Yes |
+| `MONGO_URI` | Your MongoDB Atlas connection string (e.g. `mongodb+srv://...`) | Yes |
+| `JWT_SECRET` | Any strong random string (e.g. `unfazed_jwt_secret_render_2026`) | Yes |
+| `JWT_EXPIRES_IN` | `7d` | Yes |
+| `RAZORPAY_KEY_ID` | Your Razorpay Key ID (or `rzp_test_placeholder_key`) | Optional |
+| `RAZORPAY_KEY_SECRET`| Your Razorpay Secret (or `placeholder_secret_key`) | Optional |
+| `RAZORPAY_WEBHOOK_SECRET` | Your Razorpay Webhook Secret | Optional |
+| `EMAIL_HOST` | `smtp.ethereal.email` (or `smtp.gmail.com`) | Optional |
+| `EMAIL_PORT` | `587` (or `465` for SSL) | Optional |
+| `EMAIL_USER` | Your email address | Optional |
+| `EMAIL_PASS` | Your email app password | Optional |
+
+> **Note on Port**: Render automatically injects `process.env.PORT`. The backend binds to `0.0.0.0` and `process.env.PORT` automatically.
+
+---
+
 ## 📜 License
 ISC License — Unfazed Team
