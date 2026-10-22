@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "npm run build:frontend && npm run install:backend",
-    "build:frontend": "npm --prefix unfazed-frontend install && npm --prefix unfazed-frontend run build",
+    "build:frontend": "npm --prefix unfazed-frontend install --include=dev && npm --prefix unfazed-frontend run build",
     "install:backend": "npm --prefix unfazed-backend install",
     "install:all": "npm --prefix unfazed-backend install && npm --prefix unfazed-frontend install",
     "start": "node unfazed-backend/server.js",
